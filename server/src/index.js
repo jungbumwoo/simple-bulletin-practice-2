@@ -25,7 +25,6 @@ app.use("/api", api);
 let sql = "SELECT * FROM test";
 conn.query(sql, (err, results, fields) => {
     if (err) console.log(err);
-
     console.log(results);
 });
 app.listen(port, () => {
