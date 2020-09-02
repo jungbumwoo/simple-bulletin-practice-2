@@ -9,11 +9,44 @@ router.get("/token", (req, res) => {
         user: user,
         token
     })
-}) 
+});
+
+router.get("/login", (req, res) => {
+    const username = req.body.username;
+    const password = req.body.password;
+
+    let sql = `SELECT * FROM user WHERE username=?`;
+    const post = [username];
+    console.log(`post is : ${post}`);
+    mysql.query(sql, post, (err, results, fields) => {
+        if (err) {
+            console.log(err);
+            return res.json({
+                ok: false,
+                error: "db error",
+                status: 400
+            });
+        } else {
+            const user_password = results[0].password;
+            if (password === user_password) {
+                req.session.token = username;
+                return res.json({
+                    ok: true,
+                    error: null,
+                    status: 200
+                });
+            } else {
+                return res.json({
+                    ok: false,
+                    error: "check again username and password",
+                    status: 400
+                })
+            }
+        }
+    });
+});
 
 router.post("/new", (req, res) => {
-    console.log(req.body);
-
     const username = req.body.username;
     const password = req.body.password;
 
