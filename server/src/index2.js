@@ -1,37 +1,33 @@
 import express from "express";
-import api from "./routes/api";
-import conn from "./db/mysql";
-import session from "express-session";
-var MySQLStore = require('express-mysql-session')(session);
-import session_store_opts from "./session/storeOptions";
 import bodyParser from "body-parser";
-import dotenv from "dotenv";
-
-dotenv.config();
+import api from "./routes/api";
+import session from "express-session";
+var MySQLStore = require("express-mysql-session")(session);
+import session_store_opts from "./session/storeOptions";
 
 const app = express();
 const sessionStore = new MySQLStore(session_store_opts);
 
 let port = 8080;
+//app.use(bodyParser());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use(session({
-    key: "afaef!@#FAD",
-    secret: "afawef@#!#ASfVJZjo",
+app.use(
+  session({
+    key: "sadkljsdaklj!",
+    secret: "askldjaslkdj@",
     store: sessionStore,
     resave: false,
     saveUninitialized: false
-}));
-
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({
-    extended: true
-}));
+  })
+);
 app.use("/api", api);
+//SERVE STATIC FILES = REACT PROJECT
 app.use("/", express.static(__dirname + "/../../client/build"));
-// 이거 client 파일 연동하는거랑 eject는 공부해봐야할듯.
+app.use("/media", express.static(__dirname + "/media"));
 
 app.get("/test", (req, res) => {
-  req.session.test= 1;
   const session = req.session.test;
   return res.json({
     session: session
@@ -39,7 +35,5 @@ app.get("/test", (req, res) => {
 });
 
 app.listen(port, () => {
-    console.log("Express is listerning on Port, port");
+  console.log("Express is listening on port", port);
 });
-
-

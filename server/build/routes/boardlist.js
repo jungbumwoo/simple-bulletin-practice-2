@@ -9,18 +9,13 @@ exports["default"] = void 0;
 
 var _express = _interopRequireDefault(require("express"));
 
+var _mysql = _interopRequireDefault(require("mysql"));
+
 var router = _express["default"].Router();
 
-router.post("/", function (req, res) {
-  console.log(req.body.contents);
+router.get("/boardlist", function (req, res) {
   return res.json({
-    success: true
-  });
-});
-router.get("/:id", function (req, res) {
-  console.log("reading post : ", req.params.id);
-  return res.json({
-    index: req.params.id
+    hi: hi
   });
 });
 var _default = router;
