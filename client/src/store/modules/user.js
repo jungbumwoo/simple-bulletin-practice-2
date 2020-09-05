@@ -2,12 +2,19 @@
 import axios from "axios";
 // actions
 const GET_TOKEN = "user/GET_TOKEN";
+const LOGIN = "user/LOGIN";
+    
 
 // action creators
 export const getToken = token => ({
     type: GET_TOKEN,
     token
 });
+
+export const login = () => ({
+    type: LOGIN
+});
+
 
 //api
 export const apiGetToken = () => {
@@ -25,6 +32,23 @@ export const apiGetToken = () => {
     }
 }
 
+export const apiLogin = (username, password) => {
+    return async(dispatch, getState) => {
+        axios
+            .post("/api/auth/login", {
+                username,
+                password
+            })
+            .then(res => res.data)
+            .then(data => {
+                if (data.ok) {
+                    dispatch(login());
+                }
+            })
+            .catch(err => console.log(err));
+    }
+}
+
 
 // initialState
 const initialState = {
@@ -37,6 +61,8 @@ export default function reducer(state = initialState, action) {
     switch (action.type) {
         case GET_TOKEN:
             return applyGetTokken(state, action);
+        case LOGIN:
+            return applyLogin(state, action);
         default:
             return state;
     }
@@ -54,3 +80,10 @@ const applyGetTokken = (state, action) => {
         session_token: token
     }
 }
+
+const applyLogin = (state, action) => {
+    return {
+        ...state,
+        isLoggedIn: true
+    };
+};
